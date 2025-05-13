@@ -1,0 +1,78 @@
+<mat-card class="profile-card">
+  <mat-card-header>
+    <mat-card-title>Profile Information</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (!isEditing) {
+      <div class="profile-info">
+        <div class="info-item">
+          <mat-icon color="primary">person</mat-icon>
+          <div class="info-content">
+            <div class="info-label">Username</div>
+            <div class="info-value">{{ user.username }}</div>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon color="primary">email</mat-icon>
+          <div class="info-content">
+            <div class="info-label">Email</div>
+            <div class="info-value">{{ user.email }}</div>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon color="primary">calendar_today</mat-icon>
+          <div class="info-content">
+            <div class="info-label">Joined</div>
+            <div class="info-value">{{ user.createdAt | date }}</div>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button mat-raised-button color="primary" (click)="startEditing()">
+            <mat-icon>edit</mat-icon> Edit Profile
+          </button>
+          <button mat-raised-button color="warn" (click)="deleteAccount()">
+            <mat-icon>delete</mat-icon> Delete Account
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (isEditing) {
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" required>
+          <mat-icon matSuffix>person</mat-icon>
+          @if (f['username'].errors?.['required']) {
+            <mat-error>Username is required</mat-error>
+          }
+          @if (f['username'].errors?.['minlength']) {
+            <mat-error>Username must be at least 3 characters</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput value="{{ user.email }}" disabled>
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-hint>Email cannot be changed</mat-hint>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+            @if (loading) {
+              <mat-spinner diameter="20" class="spinner-margin"></mat-spinner>
+            } @else {
+              <span>Save Changes</span>
+            }
+          </button>
+          <button mat-button type="button" (click)="cancelEditing()">Cancel</button>
+        </div>
+      </form>
+    }
+  </mat-card-content>
+</mat-card>

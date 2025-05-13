@@ -1,0 +1,23 @@
+.review-card {
+  margin-bottom: 16px;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+}
+
+.rating-stars {
+  color: #ffc107;
+  margin-left: 12px;
+  font-size: 1rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.review-actions {
+  display: flex;
+  align-items: center;
+}

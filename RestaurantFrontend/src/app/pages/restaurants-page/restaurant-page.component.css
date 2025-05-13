@@ -1,0 +1,56 @@
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  color: #3f51b5;
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.welcome-card {
+  background-color: #e8eaf6;
+  margin-bottom: 16px;
+}
+
+.welcome-card mat-card-content {
+  display: flex;
+  align-items: center;
+}
+
+.welcome-card mat-icon {
+  margin-right: 8px;
+}
+
+.loading-container,
+.error-container,
+.no-results {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.error-content,
+.no-results-content {
+  display: flex;
+  align-items: center;
+}
+
+.error-content mat-icon,
+.no-results-content mat-icon {
+  margin-right: 8px;
+}
+
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .restaurant-grid {
+    grid-template-columns: 1fr;
+  }
+}

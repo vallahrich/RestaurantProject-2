@@ -1,0 +1,23 @@
+.review-form-card {
+  margin-bottom: 24px;
+}
+
+.review-form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.error-message {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.error-message mat-icon {
+  margin-right: 8px;
+}
+
+.spinner-margin {
+  margin: 0 8px;
+}

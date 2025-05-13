@@ -1,0 +1,60 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 48px 0;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.error-container {
+  margin: 32px 0;
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+}
+
+.error-content mat-icon {
+  margin-right: 8px;
+}
+
+.restaurant-detail {
+  margin-top: 24px;
+}
+
+.restaurant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.restaurant-title h1 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+  color: #3f51b5;
+}
+
+.restaurant-title h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .restaurant-header {
+    flex-direction: column;
+  }
+  
+  .bookmark-action {
+    margin-top: 16px;
+    align-self: flex-start;
+  }
+}

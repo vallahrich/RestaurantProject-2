@@ -1,0 +1,60 @@
+.review-section {
+  margin-top: 32px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: #3f51b5;
+}
+
+.add-review-button {
+  margin: 24px 0;
+}
+
+.user-review-section {
+  margin: 24px 0;
+}
+
+.user-review-card {
+  border: 1px solid #4caf50;
+}
+
+.user-review-card .mat-mdc-card-header {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.loading-container,
+.error-container,
+.no-reviews {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.error-content,
+.no-reviews-content {
+  display: flex;
+  align-items: center;
+}
+
+.error-content mat-icon,
+.no-reviews-content mat-icon {
+  margin-right: 8px;
+}
+
+.reviews-list {
+  margin-top: 24px;
+}
+
+.reviews-count {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.7);
+}

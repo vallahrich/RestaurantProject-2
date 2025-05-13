@@ -1,0 +1,50 @@
+.profile-card {
+  margin-bottom: 24px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-item mat-icon {
+  margin-right: 16px;
+  margin-top: 4px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.spinner-margin {
+  margin-right: 8px;
+}

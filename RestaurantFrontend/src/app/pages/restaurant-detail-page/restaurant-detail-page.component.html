@@ -1,0 +1,42 @@
+<div class="container">
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading restaurant details...</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-container">
+      <mat-card>
+        <mat-card-content class="error-content">
+          <mat-icon color="warn">error</mat-icon>
+          <span>{{ error }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  @if (restaurant && !loading) {
+    <div class="restaurant-detail">
+      <div class="restaurant-header">
+        <div class="restaurant-title">
+          <h1>{{ restaurant.name }}</h1>
+          <h2>{{ restaurant.cuisine }} Cuisine</h2>
+        </div>
+
+        @if (isLoggedIn) {
+          <div class="bookmark-action">
+            <button mat-raised-button [color]="isBookmarked ? 'primary' : ''" (click)="toggleBookmark()">
+              <mat-icon>{{ isBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+              {{ isBookmarked ? 'Bookmarked' : 'Bookmark' }}
+            </button>
+          </div>
+        }
+      </div>
+
+      <app-restaurant-info [restaurant]="restaurant"></app-restaurant-info>
+      <app-review-section [restaurantId]="restaurantId" [isLoggedIn]="isLoggedIn"></app-review-section>
+    </div>
+  }
+</div>

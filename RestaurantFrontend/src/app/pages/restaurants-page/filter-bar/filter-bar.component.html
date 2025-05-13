@@ -1,0 +1,58 @@
+<mat-card class="filter-card">
+  <mat-card-header>
+    <mat-card-title>Filter Restaurants</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="filter-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Neighborhood</mat-label>
+          <mat-select formControlName="neighborhood">
+            <mat-option value="">All Neighborhoods</mat-option>
+            @for (neighborhood of neighborhoods; track neighborhood) {
+              <mat-option [value]="neighborhood">{{ neighborhood }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cuisine</mat-label>
+          <mat-select formControlName="cuisine">
+            <mat-option value="">All Cuisines</mat-option>
+            @for (cuisine of cuisines; track cuisine) {
+              <mat-option [value]="cuisine">{{ cuisine }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Price Range</mat-label>
+          <mat-select formControlName="priceRange">
+            <mat-option value="">All Prices</mat-option>
+            <mat-option value="L">$ (Budget)</mat-option>
+            <mat-option value="M">$$ (Moderate)</mat-option>
+            <mat-option value="H">$$$ (Luxury)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dietary Options</mat-label>
+          <mat-select formControlName="dietaryOptions">
+            <mat-option value="">All Options</mat-option>
+            <mat-option value="Vegetarian">Vegetarian</mat-option>
+            <mat-option value="Vegan">Vegan</mat-option>
+            <mat-option value="Gluten-Free">Gluten-Free</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+  <mat-card-actions class="filter-actions">
+    <button mat-raised-button color="primary" (click)="applyFilters()">
+      <mat-icon>filter_list</mat-icon> Apply Filters
+    </button>
+    <button mat-button (click)="clearFilters()">
+      <mat-icon>clear</mat-icon> Clear Filters
+    </button>
+  </mat-card-actions>
+</mat-card>

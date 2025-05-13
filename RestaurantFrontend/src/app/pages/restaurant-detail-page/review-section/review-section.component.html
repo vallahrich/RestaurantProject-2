@@ -1,0 +1,78 @@
+<div class="review-section">
+  <h2 class="section-title">Reviews</h2>
+  <mat-divider></mat-divider>
+
+  @if (isLoggedIn) {
+    @if (!userReview && !showReviewForm) {
+      <div class="add-review-button">
+        <button mat-raised-button color="primary" (click)="showReviewForm = true">
+          <mat-icon>add_comment</mat-icon> Add Your Review
+        </button>
+      </div>
+    }
+
+    @if (userReview && !showReviewForm) {
+      <div class="user-review-section">
+        <mat-card class="user-review-card">
+          <mat-card-header>
+            <mat-card-title>Your Review</mat-card-title>
+            <div class="spacer"></div>
+            <button mat-button color="primary" (click)="onEditReview()">
+              <mat-icon>edit</mat-icon> Edit
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <app-review-item [review]="userReview" [isOwnReview]="true" (editReview)="onEditReview()"
+              (deleteReview)="onReviewDeleted($event)">
+            </app-review-item>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+
+    @if (showReviewForm) {
+      <app-review-form [restaurantId]="restaurantId" [review]="userReview"
+        (reviewSubmitted)="onReviewSubmitted($event)" (canceled)="showReviewForm = false">
+      </app-review-form>
+    }
+  }
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-container">
+      <mat-card>
+        <mat-card-content class="error-content">
+          <mat-icon color="warn">error</mat-icon>
+          <span>{{ error }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  @if (!loading && reviews.length === 0) {
+    <div class="no-reviews">
+      <mat-card>
+        <mat-card-content class="no-reviews-content">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <span>No reviews yet. Be the first to review this restaurant!</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  @if (!loading && reviews.length > 0) {
+    <div class="reviews-list">
+      <h3 class="reviews-count">All Reviews ({{ reviews.length }})</h3>
+      @for (review of reviews; track review.reviewId) {
+        <app-review-item [review]="review" [isOwnReview]="isUserReview(review)" (editReview)="onEditReview()"
+          (deleteReview)="onReviewDeleted($event)">
+        </app-review-item>
+      }
+    </div>
+  }
+</div>

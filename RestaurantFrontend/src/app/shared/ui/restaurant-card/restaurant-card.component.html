@@ -1,0 +1,17 @@
+<mat-card class="restaurant-card">
+  <mat-card-header>
+    <mat-card-title>{{ restaurant.name }}</mat-card-title>
+    <mat-card-subtitle>{{ restaurant.cuisine }} • {{ getPriceRange(restaurant.priceRange) }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p><strong>Neighborhood:</strong> {{ restaurant.neighborhood }}</p>
+    @if (restaurant.dietaryOptions) {
+      <p><strong>Dietary Options:</strong> {{ restaurant.dietaryOptions }}</p>
+    }
+  </mat-card-content>
+  <mat-card-actions>
+    <a mat-raised-button color="primary" [routerLink]="['/restaurant', restaurant.restaurantId]">
+      <mat-icon>visibility</mat-icon> View Details
+    </a>
+  </mat-card-actions>
+</mat-card>

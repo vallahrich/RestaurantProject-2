@@ -1,0 +1,33 @@
+<mat-toolbar color="primary">
+  <a mat-button routerLink="/" class="app-title">Copenhagen Restaurant Explorer</a>
+  
+  <span class="spacer"></span>
+  
+  <div>
+    <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon>home</mat-icon> Home
+    </a>
+    <a mat-button routerLink="/restaurants" routerLinkActive="active-link">
+      <mat-icon>restaurant</mat-icon> Restaurants
+    </a>
+    
+    @if (!isLoggedIn) {
+      <a mat-button routerLink="/auth" routerLinkActive="active-link">
+        <mat-icon>login</mat-icon> Sign In
+      </a>
+    } @else {
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{ currentUser?.username }}
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <a mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon> Profile
+        </a>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon> Logout
+        </button>
+      </mat-menu>
+    }
+  </div>
+</mat-toolbar>

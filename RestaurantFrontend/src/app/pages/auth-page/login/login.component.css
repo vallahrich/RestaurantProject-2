@@ -1,0 +1,23 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+}
+
+.form-actions {
+  margin-top: 16px;
+}
+
+.submit-button {
+  width: 100%;
+}
+
+.error-message {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.spinner-margin {
+  margin: 0 8px;
+}

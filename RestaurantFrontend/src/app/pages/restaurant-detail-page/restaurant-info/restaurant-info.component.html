@@ -1,0 +1,56 @@
+<mat-card class="info-card">
+  <mat-card-header>
+    <mat-card-title>Restaurant Details</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="info-grid">
+      <div class="info-item">
+        <mat-icon color="primary">place</mat-icon>
+        <div class="info-content">
+          <div class="info-label">Address</div>
+          <div class="info-value">{{ restaurant.address }}</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon color="primary">location_city</mat-icon>
+        <div class="info-content">
+          <div class="info-label">Neighborhood</div>
+          <div class="info-value">{{ restaurant.neighborhood }}</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon color="primary">restaurant</mat-icon>
+        <div class="info-content">
+          <div class="info-label">Cuisine</div>
+          <div class="info-value">{{ restaurant.cuisine }}</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon color="primary">attach_money</mat-icon>
+        <div class="info-content">
+          <div class="info-label">Price Range</div>
+          <div class="info-value">{{ getPriceRange(restaurant.priceRange) }}</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon color="primary">access_time</mat-icon>
+        <div class="info-content">
+          <div class="info-label">Opening Hours</div>
+          <div class="info-value">{{ restaurant.openingHours || 'Not specified' }}</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon color="primary">eco</mat-icon>
+        <div class="info-content">
+          <div class="info-label">Dietary Options</div>
+          <div class="info-value">{{ restaurant.dietaryOptions || 'None specified' }}</div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

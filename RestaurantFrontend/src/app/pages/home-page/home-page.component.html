@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="hero-section">
+    <h1 class="hero-title">Copenhagen Restaurant Explorer</h1>
+    <p class="hero-subtitle">Discover the best restaurants in Copenhagen</p>
+    <p class="hero-description">Browse restaurants, read reviews, and find your new favorite spot.</p>
+    <div class="hero-actions">
+      <a mat-raised-button color="primary" routerLink="/restaurants" class="mr-2">
+        <mat-icon>restaurant_menu</mat-icon> Browse Restaurants
+      </a>
+      @if (!isLoggedIn) {
+        <a mat-stroked-button routerLink="/auth">
+          <mat-icon>login</mat-icon> Sign In
+        </a>
+      }
+    </div>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Featured Restaurants</h2>
+    <mat-divider></mat-divider>
+  
+    @if (loading) {
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+  
+    @if (error) {
+      <div class="error-message">
+        <mat-card>
+          <mat-card-content>
+            <mat-icon color="warn">error</mat-icon> {{ error }}
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+  
+    <div class="restaurant-grid">
+      @for (restaurant of featuredRestaurants; track restaurant.restaurantId) {
+        <div class="restaurant-item">
+          <app-restaurant-card [restaurant]="restaurant"></app-restaurant-card>
+        </div>
+      }
+    </div>
+  </div>
+</div>

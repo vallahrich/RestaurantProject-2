@@ -1,0 +1,39 @@
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  color: #3f51b5;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.success-alert,
+.error-alert {
+  margin-bottom: 24px;
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+}
+
+.alert-content mat-icon {
+  margin-right: 8px;
+}
+
+.close-button {
+  margin-left: auto;
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+}

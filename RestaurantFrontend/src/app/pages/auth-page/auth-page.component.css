@@ -1,0 +1,14 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+}
+
+::ng-deep .mat-mdc-tab-body-content {
+  padding: 24px 16px 16px 16px;
+}

@@ -1,0 +1,51 @@
+@if (user) {
+  <div class="container">
+    <div class="page-header">
+      <h1>My Profile</h1>
+    </div>
+
+    @if (successMessage) {
+      <div class="success-alert">
+        <mat-card>
+          <mat-card-content class="alert-content">
+            <mat-icon color="primary">check_circle</mat-icon>
+            <span>{{ successMessage }}</span>
+            <button mat-icon-button class="close-button" (click)="successMessage = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="error-alert">
+        <mat-card>
+          <mat-card-content class="alert-content">
+            <mat-icon color="warn">error</mat-icon>
+            <span>{{ errorMessage }}</span>
+            <button mat-icon-button class="close-button" (click)="errorMessage = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+
+    <div class="profile-content">
+      <div class="profile-sidebar">
+        <app-profile-info [user]="user" (profileUpdated)="onProfileUpdated($event)" (error)="onError($event)">
+        </app-profile-info>
+
+        <app-password-section [userId]="user.userId" (passwordUpdated)="onProfileUpdated($event)"
+          (error)="onError($event)">
+        </app-password-section>
+      </div>
+
+      <div class="profile-main">
+        <app-bookmarks-section [userId]="user.userId" (error)="onError($event)">
+        </app-bookmarks-section>
+      </div>
+    </div>
+  </div>
+}

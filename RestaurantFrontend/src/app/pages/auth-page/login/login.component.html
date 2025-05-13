@@ -1,0 +1,37 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Username</mat-label>
+    <input matInput [formControl]="username" name="username">
+    <mat-icon matSuffix>person</mat-icon>
+    @if (username.errors?.['required'] && (username.dirty || username.touched)) {
+      <mat-error>Username is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput [formControl]="password" name="password" 
+           [type]="hidePassword ? 'password' : 'text'">
+    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+      <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    @if (password.errors?.['required'] && (password.dirty || password.touched)) {
+      <mat-error>Password is required</mat-error>
+    }
+  </mat-form-field>
+
+  <div class="form-actions">
+    <button mat-raised-button color="primary" type="submit" 
+            [disabled]="loading || loginForm.invalid" class="submit-button">
+      @if (loading) {
+        <mat-spinner diameter="20" class="spinner-margin"></mat-spinner>
+      } @else {
+        <span>Login</span>
+      }
+    </button>
+  </div>
+
+  @if (error) {
+    <mat-error class="error-message">{{error}}</mat-error>
+  }
+</form>

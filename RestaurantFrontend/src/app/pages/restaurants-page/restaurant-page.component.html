@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Find Your Perfect Restaurant</h1>
+    @if (isLoggedIn) {
+      <mat-card class="welcome-card">
+        <mat-card-content>
+          <mat-icon color="primary">person</mat-icon>
+          <span>Hi, {{ username }}! Find your perfect restaurant below.</span>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <app-filter-bar (filtersApplied)="onFiltersApplied($event)"></app-filter-bar>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-container">
+      <mat-card>
+        <mat-card-content class="error-content">
+          <mat-icon color="warn">error</mat-icon>
+          <span>{{ error }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  @if (!loading && restaurants.length === 0) {
+    <div class="no-results">
+      <mat-card>
+        <mat-card-content class="no-results-content">
+          <mat-icon>search_off</mat-icon>
+          <span>No restaurants found matching your filters. Try adjusting your criteria.</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <div class="restaurant-grid">
+    @for (restaurant of restaurants; track restaurant.restaurantId) {
+      <div class="restaurant-item">
+        <app-restaurant-card [restaurant]="restaurant"></app-restaurant-card>
+      </div>
+    }
+  </div>
+</div>

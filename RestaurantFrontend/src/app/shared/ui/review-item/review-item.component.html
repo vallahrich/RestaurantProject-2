@@ -1,0 +1,23 @@
+<mat-card class="review-card">
+  <mat-card-header>
+    <mat-card-title class="review-header">
+      <span>{{ review.username || 'Anonymous' }}</span>
+      <span class="rating-stars">{{ getRatingStars(review.rating) }}</span>
+    </mat-card-title>
+    <mat-card-subtitle>{{ review.createdAt | date }}</mat-card-subtitle>
+    <div class="spacer"></div>
+    @if (isOwnReview) {
+      <div class="review-actions">
+        <button mat-icon-button color="primary" (click)="onEdit()" matTooltip="Edit Review">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete()" matTooltip="Delete Review">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ review.comment }}</p>
+  </mat-card-content>
+</mat-card>

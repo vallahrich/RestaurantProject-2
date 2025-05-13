@@ -1,0 +1,44 @@
+<mat-card class="bookmarks-card">
+  <mat-card-header>
+    <mat-card-title>My Bookmarked Restaurants</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading) {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+
+    @if (!loading && bookmarkedRestaurants.length === 0) {
+      <div class="no-bookmarks">
+        <mat-icon color="primary">bookmark_border</mat-icon>
+        <p>You haven't bookmarked any restaurants yet.</p>
+      </div>
+    }
+
+    @if (!loading && bookmarkedRestaurants.length > 0) {
+      <div class="bookmarks-grid">
+        @for (restaurant of bookmarkedRestaurants; track restaurant.restaurantId) {
+          <mat-card class="bookmark-item">
+            <mat-card-header>
+              <mat-card-title>{{ restaurant.name }}</mat-card-title>
+              <mat-card-subtitle>{{ restaurant.cuisine }} • {{ getPriceRange(restaurant.priceRange) }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Neighborhood:</strong> {{ restaurant.neighborhood }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <a mat-button color="primary" [routerLink]="['/restaurant', restaurant.restaurantId]">
+                <mat-icon>visibility</mat-icon> View
+              </a>
+              <button mat-button color="warn" (click)="removeBookmark(restaurant.restaurantId)">
+                <mat-icon>bookmark_remove</mat-icon> Remove
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

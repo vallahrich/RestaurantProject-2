@@ -1,0 +1,40 @@
+.bookmarks-card {
+  height: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.no-bookmarks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.no-bookmarks mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 16px;
+}
+
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.bookmark-item {
+  height: 100%;
+}
+
+.bookmark-item mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px 16px;
+}
