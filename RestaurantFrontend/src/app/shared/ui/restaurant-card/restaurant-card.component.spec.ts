@@ -30,49 +30,61 @@ describe('RestaurantCardComponent', () => {
         RouterTestingModule,
         MatCardModule,
         MatButtonModule,
-        MatIconModule
-      ],
-      declarations: [RestaurantCardComponent]
+        MatIconModule,
+        RestaurantCardComponent
+      ]
     }).compileComponents();
   });
   
   beforeEach(() => {
+    // Create component and set input
     fixture = TestBed.createComponent(RestaurantCardComponent);
     component = fixture.componentInstance;
     component.restaurant = mockRestaurant;
     fixture.detectChanges();
   });
   
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
   
-  it('should display restaurant name', () => {
+  it('should display the restaurant name', () => {
+    // Check restaurant name is shown
     const titleElement = fixture.nativeElement.querySelector('mat-card-title');
     expect(titleElement.textContent).toContain('Test Restaurant');
   });
   
   it('should display cuisine and price range', () => {
+    // Check subtitle shows cuisine and price
     const subtitleElement = fixture.nativeElement.querySelector('mat-card-subtitle');
     expect(subtitleElement.textContent).toContain('Italian');
-    expect(subtitleElement.textContent).toContain('$$'); // M price range should show as $$
+    expect(subtitleElement.textContent).toContain('$$'); // M price range -> $$
   });
   
   it('should display the neighborhood', () => {
+    // Check neighborhood is shown
     const content = fixture.nativeElement.querySelector('mat-card-content');
     expect(content.textContent).toContain('Downtown');
   });
   
-  it('should have a view details button with correct link', () => {
+  it('should display dietary options when available', () => {
+    // Check dietary options are shown
+    const content = fixture.nativeElement.querySelector('mat-card-content');
+    expect(content.textContent).toContain('Vegetarian options');
+  });
+  
+  it('should link to the restaurant detail page', () => {
+    // Check link to detail page exists with correct ID
     const button = fixture.nativeElement.querySelector('a[mat-raised-button]');
     expect(button.textContent).toContain('View Details');
     expect(button.getAttribute('href')).toMatch(/\/restaurant\/1$/);
   });
   
-  it('should convert price range correctly', () => {
+  it('should convert price ranges to dollar signs', () => {
+    // Test price range conversion helper method
     expect(component.getPriceRange('L')).toBe('$');
     expect(component.getPriceRange('M')).toBe('$$');
     expect(component.getPriceRange('H')).toBe('$$$');
-    expect(component.getPriceRange('unknown')).toBe('$'); // Default case
+    expect(component.getPriceRange('X')).toBe('$'); // Default for unknown
   });
 });

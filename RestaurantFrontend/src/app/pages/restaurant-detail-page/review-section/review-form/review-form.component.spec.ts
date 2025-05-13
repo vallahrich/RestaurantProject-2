@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of, throwError } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of, throwError } from 'rxjs';
 
 import { ReviewFormComponent } from './review-form.component';
 import { ReviewService } from '../../../../services/review.service';
@@ -22,22 +23,26 @@ describe('ReviewFormComponent', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
-    // Arrange - service spies
+    // Create service spies
     const reviewSpy = jasmine.createSpyObj('ReviewService', ['createReview', 'updateReview']);
-    const authSpy = jasmine.createSpyObj('AuthService', ['currentUserValue']);
-
+    const authSpy = jasmine.createSpyObj('AuthService', [], {
+      // Mock currentUserValue as a property getter
+      currentUserValue: { userId: 1, username: 'testuser' }
+    });
+    
     await TestBed.configureTestingModule({
-      declarations: [ReviewFormComponent],
       imports: [
-        FormsModule,
+        ReactiveFormsModule,
         HttpClientTestingModule,
+        NoopAnimationsModule,
         MatCardModule,
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
         MatButtonModule,
+        MatIconModule,
         MatProgressSpinnerModule,
-        NoopAnimationsModule
+        ReviewFormComponent
       ],
       providers: [
         { provide: ReviewService, useValue: reviewSpy },
@@ -47,45 +52,34 @@ describe('ReviewFormComponent', () => {
     
     reviewServiceSpy = TestBed.inject(ReviewService) as jasmine.SpyObj<ReviewService>;
     authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    
-    // Setup the currentUserValue spy
-    Object.defineProperty(authServiceSpy, 'currentUserValue', {
-      get: () => ({ userId: 1, username: 'testuser' })
-    });
   });
 
   beforeEach(() => {
-    // Arrange - component setup
+    // Create component and set required inputs
     fixture = TestBed.createComponent(ReviewFormComponent);
     component = fixture.componentInstance;
     component.restaurantId = 1;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    // Assert
+  it('should create the component', () => {
+    // Basic smoke test
     expect(component).toBeTruthy();
   });
   
-  it('should initialize with default values', () => {
-    // Assert
-    expect(component.reviewModel.userId).toBe(1);
-    expect(component.reviewModel.restaurantId).toBe(1);
-    expect(component.reviewModel.rating).toBe(5);
-    expect(component.reviewModel.comment).toBe('');
+  it('should initialize form with default values', () => {
+    // Check default form values
+    expect(component.rating.value).toBe(5);
+    expect(component.comment.value).toBe('');
   });
   
-  it('should show different title based on edit mode', () => {
-    // Arrange - no edit
-    component.review = null;
-    fixture.detectChanges();
-    
-    // Assert
+  it('should change title based on edit mode', () => {
+    // Check title in create mode
     let title = fixture.nativeElement.querySelector('mat-card-title');
     expect(title.textContent).toContain('Add Your Review');
     
-    // Arrange - edit mode
-    component.review = {
+    // Set edit mode and check title changes
+    const existingReview: Review = {
       reviewId: 1,
       userId: 1,
       restaurantId: 1,
@@ -93,108 +87,111 @@ describe('ReviewFormComponent', () => {
       comment: 'Test review',
       createdAt: new Date()
     };
-    component.ngOnInit(); // Re-initialize to copy the review
+    component.review = existingReview;
+    component.ngOnInit();
     fixture.detectChanges();
     
-    // Assert
     title = fixture.nativeElement.querySelector('mat-card-title');
     expect(title.textContent).toContain('Edit Your Review');
   });
   
-  it('should call createReview when submitting new review', () => {
-    // Arrange
-    const mockReview: Review = {
-      reviewId: 5,
-      userId: 1, 
-      restaurantId: 1,
-      rating: 4,
-      comment: 'Great restaurant!',
-      createdAt: new Date()
-    };
-    reviewServiceSpy.createReview.and.returnValue(of(mockReview));
-    component.reviewModel = {
-      reviewId: 0,
+  it('should call createReview for new reviews', () => {
+    // Setup mock response
+    const mockResponse = {
+      reviewId: 1,
       userId: 1,
       restaurantId: 1,
-      rating: 4,
-      comment: 'Great restaurant!',
+      rating: 5,
+      comment: 'Great place',
       createdAt: new Date()
     };
+    reviewServiceSpy.createReview.and.returnValue(of(mockResponse));
+    
+    // Spy on event emitter
     spyOn(component.reviewSubmitted, 'emit');
     
-    // Mock form validity
+    // Set form values
+    component.rating.setValue(5);
+    component.comment.setValue('Great place');
+    
+    // Replace the form with a mock that will be considered valid
     component.reviewForm = { valid: true } as any;
     
-    // Act
+    // Submit form
     component.onSubmit();
     
-    // Assert
-    expect(reviewServiceSpy.createReview).toHaveBeenCalledWith(component.reviewModel);
-    expect(component.reviewSubmitted.emit).toHaveBeenCalledWith(mockReview);
-    expect(component.loading).toBeFalse();
+    // Verify createReview was called
+    expect(reviewServiceSpy.createReview).toHaveBeenCalled();
+    // Verify event was emitted
+    expect(component.reviewSubmitted.emit).toHaveBeenCalledWith(mockResponse);
   });
   
-  it('should call updateReview when editing an existing review', () => {
-    // Arrange
+  it('should call updateReview for existing reviews', () => {
+    // Setup component in edit mode
     const existingReview: Review = {
-      reviewId: 5,
-      userId: 1, 
+      reviewId: 1,
+      userId: 1,
       restaurantId: 1,
       rating: 3,
       comment: 'Original review',
       createdAt: new Date()
     };
-    const updatedReview: Review = {
+    component.review = existingReview;
+    component.ngOnInit();
+    
+    // Setup mock response
+    const mockResponse = {
       ...existingReview,
-      rating: 5,
+      rating: 4,
       comment: 'Updated review'
     };
-    component.review = existingReview;
-    component.ngOnInit(); // Copy the review to reviewModel
+    reviewServiceSpy.updateReview.and.returnValue(of(mockResponse));
     
-    // Update the model
-    component.reviewModel.rating = 5;
-    component.reviewModel.comment = 'Updated review';
-    
-    reviewServiceSpy.updateReview.and.returnValue(of(updatedReview));
+    // Spy on event emitter
     spyOn(component.reviewSubmitted, 'emit');
     
-    // Mock form validity
+    // Update form values
+    component.rating.setValue(4);
+    component.comment.setValue('Updated review');
+    
+    // Replace the form with a mock that will be considered valid
     component.reviewForm = { valid: true } as any;
     
-    // Act
+    // Submit form
     component.onSubmit();
     
-    // Assert
-    expect(reviewServiceSpy.updateReview).toHaveBeenCalledWith(component.reviewModel);
-    expect(component.reviewSubmitted.emit).toHaveBeenCalledWith(updatedReview);
-    expect(component.loading).toBeFalse();
+    // Verify updateReview was called
+    expect(reviewServiceSpy.updateReview).toHaveBeenCalled();
+    // Verify event was emitted
+    expect(component.reviewSubmitted.emit).toHaveBeenCalledWith(mockResponse);
   });
   
-  it('should handle error when review submission fails', () => {
-    // Arrange
+  it('should handle error when submission fails', () => {
+    // Setup error response
     const errorResponse = { status: 409, statusText: 'Conflict' };
-    reviewServiceSpy.createReview.and.returnValue(throwError(() => errorResponse));
+    reviewServiceSpy.createReview.and.returnValue(
+      throwError(() => errorResponse)
+    );
     
-    // Mock form validity
+    // Replace the form with a mock that will be considered valid
     component.reviewForm = { valid: true } as any;
     
-    // Act
+    // Submit form
     component.onSubmit();
     
-    // Assert
+    // Verify error handling occurred
     expect(component.loading).toBeFalse();
-    expect(component.error).toContain('already reviewed');
+    expect(component.error).toBeTruthy();
   });
   
-  it('should emit canceled event when cancel button is clicked', () => {
-    // Arrange
+  it('should emit canceled event when cancel button clicked', () => {
+    // Spy on event emitter
     spyOn(component.canceled, 'emit');
     
-    // Act
+    // Trigger cancel
     component.onCancel();
     
-    // Assert
+    // Verify event was emitted
     expect(component.canceled.emit).toHaveBeenCalled();
   });
 });

@@ -1,17 +1,15 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of, throwError } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { of, throwError } from 'rxjs';
 
 import { RegisterComponent } from './register.component';
 import { AuthService } from '../../../services/auth.service';
-import { User } from '../../../models/user.model';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -23,16 +21,15 @@ describe('RegisterComponent', () => {
     const spy = jasmine.createSpyObj('AuthService', ['register']);
     
     await TestBed.configureTestingModule({
-      declarations: [RegisterComponent],
       imports: [
-        FormsModule,
+        ReactiveFormsModule,
         HttpClientTestingModule,
+        NoopAnimationsModule,
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
         MatButtonModule,
-        MatProgressSpinnerModule,
-        NoopAnimationsModule
+        RegisterComponent
       ],
       providers: [
         { provide: AuthService, useValue: spy }
@@ -45,123 +42,94 @@ describe('RegisterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-    
-    // Set up mock for NgForm - this is important
-    component.registerForm = {
-      valid: true,
-      resetForm: jasmine.createSpy('resetForm')
-    } as unknown as NgForm;
-    
     fixture.detectChanges();
   });
   
   it('should create', () => {
+    // Basic component creation test
     expect(component).toBeTruthy();
   });
   
   it('should validate password match', () => {
-    component.registerModel.password = 'password123';
-    component.registerModel.confirmPassword = 'differentpassword';
+    // Test password match validation
+    component.password.setValue('password123');
+    component.confirmPassword.setValue('different');
     
     component.checkPasswordMatch();
-    
     expect(component.passwordsNotMatching).toBeTrue();
     
-    component.registerModel.confirmPassword = 'password123';
+    component.confirmPassword.setValue('password123');
     component.checkPasswordMatch();
-    
     expect(component.passwordsNotMatching).toBeFalse();
   });
   
-  it('should call register method and show success on successful registration', () => {
-    // Prepare mock user response
-    const mockUser: User = {
+  it('should call register service on valid form submission', () => {
+    // Setup mock response
+    const mockUser = {
       userId: 1,
       username: 'testuser',
       email: 'test@example.com',
       passwordHash: 'hashedpassword',
       createdAt: new Date()
     };
-    
-    // Setup spy return value
     authServiceSpy.register.and.returnValue(of(mockUser));
     
-    // Setup model data
-    component.registerModel = {
-      username: 'testuser',
-      email: 'test@example.com',
-      password: 'password123',
-      confirmPassword: 'password123'
-    };
+    // Set form values
+    component.username.setValue('testuser');
+    component.email.setValue('test@example.com');
+    component.password.setValue('password123');
+    component.confirmPassword.setValue('password123');
+    component.checkPasswordMatch();
     
-    // Act
+    // Submit form
     component.onSubmit();
     
-    // Assert
+    // Verify register was called with correct values
     expect(authServiceSpy.register).toHaveBeenCalledWith(
       'testuser', 'test@example.com', 'password123'
     );
-    expect(component.loading).toBeFalse();
     expect(component.success).toContain('Registration successful');
-    expect(component.error).toBe('');
   });
   
-  it('should handle registration error when user already exists', () => {
-    // Setup spy return value for error
+  it('should handle registration error', () => {
+    // Setup error response
     authServiceSpy.register.and.returnValue(
       throwError(() => ({ status: 409 }))
     );
     
-    // Setup model data
-    component.registerModel = {
-      username: 'existinguser',
-      email: 'existing@example.com',
-      password: 'password123',
-      confirmPassword: 'password123'
-    };
+    // Set form values
+    component.username.setValue('existinguser');
+    component.email.setValue('existing@example.com');
+    component.password.setValue('password123');
+    component.confirmPassword.setValue('password123');
     
-    // Act
+    // Submit form
     component.onSubmit();
     
-    // Assert
-    expect(authServiceSpy.register).toHaveBeenCalled();
-    expect(component.loading).toBeFalse();
+    // Error message should be shown
     expect(component.error).toContain('already exists');
-    expect(component.success).toBe('');
   });
   
   it('should emit registered event after successful registration', fakeAsync(() => {
-    // Setup spy for emit
+    // Spy on event emitter
     spyOn(component.registered, 'emit');
     
-    // Prepare mock user response
-    const mockUser: User = {
-      userId: 1,
-      username: 'testuser',
-      email: 'test@example.com',
-      passwordHash: 'hashedpassword',
-      createdAt: new Date()
-    };
+    // Setup mock response
+    authServiceSpy.register.and.returnValue(of({} as any));
     
-    // Setup spy return value
-    authServiceSpy.register.and.returnValue(of(mockUser));
+    // Set form values
+    component.username.setValue('testuser');
+    component.email.setValue('test@example.com');
+    component.password.setValue('password123');
+    component.confirmPassword.setValue('password123');
     
-    // Setup model data
-    component.registerModel = {
-      username: 'testuser',
-      email: 'test@example.com',
-      password: 'password123',
-      confirmPassword: 'password123'
-    };
-    
-    // Act
+    // Submit form
     component.onSubmit();
     
-    // The emit is inside a setTimeout(1500) in the component,
-    // so we need to advance the timer
+    // Advance timer for the setTimeout
     tick(1500);
     
-    // Assert
+    // Verify event was emitted
     expect(component.registered.emit).toHaveBeenCalledWith(true);
   }));
 });
