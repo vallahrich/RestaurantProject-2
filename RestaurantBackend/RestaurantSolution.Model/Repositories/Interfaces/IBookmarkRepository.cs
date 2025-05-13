@@ -22,7 +22,6 @@ namespace RestaurantSolution.Model.Repositories
 {
     public interface IBookmarkRepository
     {
-        List<Bookmark> GetBookmarksByUserId(int userId);
         List<Restaurant> GetBookmarkedRestaurants(int userId);
         bool IsBookmarked(int userId, int restaurantId);
         bool AddBookmark(Bookmark bookmark);

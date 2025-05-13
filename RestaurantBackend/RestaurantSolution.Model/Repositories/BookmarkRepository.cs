@@ -28,31 +28,6 @@ namespace RestaurantSolution.Model.Repositories
         {
         }
 
-        public List<Bookmark> GetBookmarksByUserId(int userId)
-        {
-            using var dbConn = new NpgsqlConnection(ConnectionString);
-            var bookmarks = new List<Bookmark>();
-            var cmd = dbConn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM bookmarks WHERE user_id = @userId ORDER BY created_at DESC";
-            cmd.Parameters.Add("@userId", NpgsqlDbType.Integer).Value = userId;
-            
-            var data = GetData(dbConn, cmd);
-            if (data != null)
-            {
-                while (data.Read())
-                {
-                    Bookmark bookmark = new Bookmark
-                    {
-                        UserId = Convert.ToInt32(data["user_id"]),
-                        RestaurantId = Convert.ToInt32(data["restaurant_id"]),
-                        CreatedAt = Convert.ToDateTime(data["created_at"])
-                    };
-                    bookmarks.Add(bookmark);
-                }
-            }
-            return bookmarks;
-        }
-
         public bool IsBookmarked(int userId, int restaurantId)
         {
             using var dbConn = new NpgsqlConnection(ConnectionString);
